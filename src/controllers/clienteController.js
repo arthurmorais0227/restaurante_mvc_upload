@@ -6,13 +6,13 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const { nome, cep, email, telefone, logradouro, bairro, localidade, uf, ativo } = req.body;
+        const { nome, cep, email, telefone, logradouro, bairro, localidade, uf, ativo, endereco } = req.body;
 
         if (!nome){
             return res.status(400).json({ error: 'O campo "nome" é obrigatório!' });
         }
 
-        const cliente = new ClienteModel({ nome, cep, email, telefone, logradouro, bairro, localidade, uf, ativo });
+        const cliente = new ClienteModel({ nome, cep, email, telefone, logradouro, bairro, localidade, uf, ativo, endereco });
         const data = await cliente.criar();
 
         return res.status(201).json({ message: 'Registro criado com sucesso!', data });
@@ -83,10 +83,10 @@ export const atualizar = async (req, res) => {
             cliente.email = req.body.email;
         }
         if (req.body.telefone !== undefined) {
-            cliente.telefone = parseFloat(req.body.telefone);
+            cliente.telefone = (req.body.telefone);
         }
         if (req.body.cep !== undefined) {
-            cliente.cep = parseFloat(req.body.cep);
+            cliente.cep = (req.body.cep);
         }
         if (req.body.logradouro !== undefined) {
             cliente.logradouro = req.body.logradouro;
@@ -102,6 +102,9 @@ export const atualizar = async (req, res) => {
         }
         if (req.body.ativo !== undefined) {
             cliente.ativo = Boolean(req.body.ativo);
+        }
+        if (req.body.endereco !== undefined) {
+            cliente.endereco = (req.body.endereco);
         }
 
         const data = await cliente.atualizar();
