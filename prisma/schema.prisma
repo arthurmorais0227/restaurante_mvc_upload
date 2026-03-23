@@ -7,13 +7,13 @@ datasource db {
 }
 
 enum Categoria {
-  ENTRADA
-  PRATO_PRINCIPAL
-  BEBIDA
-  SOBREMESA
+  ONLINE
+  PRESENCIAL
+  DELIVERY
+  RETIRADA
 }
 
-model Pedido {
+model Cliente {
   id           Int      @id @default(autoincrement())
   nome         String
   email        String?
@@ -25,12 +25,12 @@ model Pedido {
   uf           String?
   ativo        Boolean  @default(true)
 
-  itens        Cardapio[]
+  pedidos      Pedido[]
 
-  @@map("pedido")
+  @@map("cliente")
 }
 
-model Cardapio {
+model Pedido {
   id          Int       @id @default(autoincrement())
   nome        String
   descricao   String?
@@ -39,8 +39,8 @@ model Cardapio {
   preco       Decimal   @db.Decimal(10, 2)
   foto        String?
 
-  pedidoId    Int
-  pedido      Pedido   @relation(fields: [pedidoId], references: [id])
+  clienteId   Int
+  cliente     Cliente  @relation(fields: [clienteId], references: [id])
 
-  @@map("cardapio")
+  @@map("pedido")
 }
