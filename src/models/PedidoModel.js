@@ -1,19 +1,25 @@
 import prisma from '../utils/prismaClient.js';
 
 export default class ExemploModel {
-    constructor({ id = null, nome = null, estado = true, preco = null } = {}) {
+    constructor({ id = null, nome = null, descricao = true, disponivel = null, preco = null, foto = null, clienteId = null } = {}) {
         this.id = id;
         this.nome = nome;
-        this.estado = estado;
+        this.descricao = descricao;
+        this.disponivel = disponivel;
         this.preco = preco;
+        this.foto = foto;
+        this.clienteId = clienteId;
     }
 
     async criar() {
         return prisma.exemplo.create({
             data: {
                 nome: this.nome,
-                estado: this.estado,
-                preco: this.preco,
+                descricao: this.descricao,
+                disponivel: this.disponivel,
+                preco: new Prisma.Decimal(this.preco),
+                foto:this.foto,
+                clienteId:this.clienteId
             },
         });
     }
@@ -21,12 +27,20 @@ export default class ExemploModel {
     async atualizar() {
         return prisma.exemplo.update({
             where: { id: this.id },
-            data: { nome: this.nome, estado: this.estado, preco: this.preco },
+            data: {
+                nome: this.nome,
+                descricao: this.descricao,
+                disponivel: this.disponivel,
+                preco: new Prisma.Decimal(this.preco),
+                foto: this.foto
+            },
+
+
         });
     }
 
     async deletar() {
-        return prisma.exemplo.delete({ where: { id: this.id } });
+        return prisma.pedido.delete({ where: { id: this.id } });
     }
 
     static async buscarTodos(filtros = {}) {
@@ -36,20 +50,21 @@ export default class ExemploModel {
             where.nome = { contains: filtros.nome, mode: 'insensitive' };
         }
         if (filtros.estado !== undefined) {
-            where.estado = filtros.estado === 'true';
+            where.disponivel = filtros.disponivel === 'true';
         }
-        if (filtros.preco !== undefined) {
-            where.preco = parseFloat(filtros.preco);
+        if (filtros.categoria) {
+            where.categoria = filtros.categoria;
         }
 
         return prisma.exemplo.findMany({ where });
     }
 
     static async buscarPorId(id) {
-        const data = await prisma.exemplo.findUnique({ where: { id } });
-        if (!data) {
-            return null;
-        }
-        return new ExemploModel(data);
+        const data = await prisma.pedido.findUnique({
+            where: { id },
+            include: {cliente:true}
+        });
+
+        return data ? new PedidoModel(data) : null;
     }
 }
