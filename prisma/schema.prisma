@@ -19,6 +19,7 @@ model Cliente {
   email        String?
   telefone     String?
   cep          String?  @db.Char(9)
+  endereco     String?
   logradouro   String?
   bairro       String?
   localidade   String?

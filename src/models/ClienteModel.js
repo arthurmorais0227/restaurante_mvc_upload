@@ -1,4 +1,5 @@
 import prisma from '../utils/prismaClient.js';
+import { buscarEnderecoPorCep } from '../utils/cep.js';
 
 export default class ClienteModel {
     constructor({
@@ -6,6 +7,7 @@ export default class ClienteModel {
         email = null,
         telefone = null,
         cep = null,
+        endereco = null,
         logradouro = null,
         bairro = null,
         localidade = null,
@@ -16,6 +18,7 @@ export default class ClienteModel {
         this.email = email;
         this.telefone = telefone;
         this.cep = cep;
+        this.endereco = endereco;
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.localidade = localidade;
@@ -24,12 +27,26 @@ export default class ClienteModel {
     }
 
     async criar() {
+
+        if (!nome)
+
+
+        let endereco = {};
+        if (this.cep) {
+            try {
+                endereco = await buscarEnderecoPorCep(this.cep);
+            } catch (error) {
+                console.warn('Não foi possível buscar o endereço pelo CEP:', error.message);
+            }
+        }
+
         return prisma.cliente.create({
             data: {
                 nome: this.nome,
                 email: this.email,
                 telefone: this.telefone,
                 cep: this.cep,
+                endreco: this.endereco,
                 logradouro: this.logradouro,
                 bairro: this.bairro,
                 localidade: this.localidade,
@@ -40,6 +57,15 @@ export default class ClienteModel {
     }
 
     async atualizar() {
+        let endereco = {};
+        if (this.cep) {
+            try {
+                endereco = await buscarEnderecoPorCep(this.cep);
+            } catch (error) {
+                console.warn('Não foi possível buscar o endereço pelo CEP:', error.message);
+            }
+        }
+
         return prisma.cliente.update({
             where: { id: this.id },
             data: {
@@ -47,10 +73,10 @@ export default class ClienteModel {
                 email: this.email,
                 telefone: this.telefone,
                 cep: this.cep,
-                logradouro: this.logradouro,
-                bairro: this.bairro,
-                localidade: this.localidade,
-                uf: this.uf,
+                logradouro: endereco.logradouro || this.logradouro,
+                bairro: endereco.bairro || this.bairro,
+                localidade: endereco.localidade || this.localidade,
+                uf: endereco.uf || this.uf,
                 ativo: this.ativo,
             },
         });
