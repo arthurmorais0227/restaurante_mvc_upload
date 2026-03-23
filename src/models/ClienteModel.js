@@ -27,9 +27,17 @@ export default class ClienteModel {
     }
 
     async criar() {
+        if (!this.nome) {
+            return { status: 400, error: 'Nome é obrigatório' };
+        }
 
-        if (!nome)
+        if (this.nome.length < 3 || this.nome.length > 100) {
+            return { status: 400, error: 'O nome deve ter entre 3 e 100 caracteres.' };
+        }
 
+        if (!/^\d{11}$/.test(this.cpf)) {
+            return { status: 400, error: 'CPF deve conter 11 dígitos numéricos.' };
+        }
 
         let endereco = {};
         if (this.cep) {
@@ -83,6 +91,10 @@ export default class ClienteModel {
     }
 
     async deletar() {
+        if (this.ativo === false) {
+            throw new Error('Não é possível deletar um cliente inativo.');
+        }
+
         return prisma.cliente.delete({ where: { id: this.id } });
     }
 
@@ -92,8 +104,8 @@ export default class ClienteModel {
         if (filtros.nome) {
             where.nome = { contains: filtros.nome, mode: 'insensitive' };
         }
-        if (filtros.ativo !== undefined) {
-            where.ativo = filtros.ativo === 'true';
+        if (filtros.localidade) {
+            where.localidade = { contains: filtros.localidade, mode: 'insensitive' };
         }
         if (filtros.telefone) {
             where.telefone = { contains: filtros.telefone, mode: 'insensitive' };
