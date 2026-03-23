@@ -11,12 +11,12 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     console.log('🌱 Limpando banco...');
 
-    await prisma.cardapio.deleteMany();
     await prisma.pedido.deleteMany();
+    await prisma.cliente.deleteMany();
 
     console.log('👤 Criando clientes...');
 
-    const cliente1 = await prisma.pedido.create({
+    const cliente1 = await prisma.cliente.create({
         data: {
             nome: 'João Silva',
             email: 'joao@email.com',
@@ -29,7 +29,7 @@ async function main() {
         },
     });
 
-    const cliente2 = await prisma.pedido.create({
+    const cliente2 = await prisma.cliente.create({
         data: {
             nome: 'Maria Souza',
             email: 'maria@email.com',
@@ -42,7 +42,7 @@ async function main() {
         },
     });
 
-    const cliente3 = await prisma.pedido.create({
+    const cliente3 = await prisma.cliente.create({
         data: {
             nome: 'Carlos Lima',
             email: 'carlos@email.com',
@@ -50,27 +50,27 @@ async function main() {
         },
     });
 
-    const cliente4 = await prisma.pedido.create({
+    const cliente4 = await prisma.cliente.create({
         data: {
             nome: 'Ana Oliveira',
             email: 'ana@email.com',
         },
     });
 
-    const cliente5 = await prisma.pedido.create({
+    const cliente5 = await prisma.cliente.create({
         data: {
             nome: 'Pedro Santos',
         },
     });
 
-    const cliente6 = await prisma.pedido.create({
+    const cliente6 = await prisma.cliente.create({
         data: {
             nome: 'Juliana Rocha',
             telefone: '11999990006',
         },
     });
 
-    const cliente7 = await prisma.pedido.create({
+    const cliente7 = await prisma.cliente.create({
         data: {
             nome: 'Fernando Alves',
             cep: '13000-007',
@@ -79,115 +79,115 @@ async function main() {
         },
     });
 
-    const cliente8 = await prisma.pedido.create({
+    const cliente8 = await prisma.cliente.create({
         data: {
             nome: 'Patricia Gomes',
         },
     });
 
-    const cliente9 = await prisma.pedido.create({
+    const cliente9 = await prisma.cliente.create({
         data: {
             nome: 'Ricardo Martins',
         },
     });
 
-    const cliente10 = await prisma.pedido.create({
+    const cliente10 = await prisma.cliente.create({
         data: {
             nome: 'Camila Ferreira',
         },
     });
 
-    console.log('🍽️ Criando itens do cardápio...');
+    console.log('📦 Criando pedidos...');
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Hambúrguer',
-            descricao: 'Hambúrguer artesanal',
-            categoria: 'PRATO_PRINCIPAL',
+            nome: 'Pedido 1',
+            descricao: 'Pedido simples',
+            categoria: 'ONLINE',
             preco: 25.0,
-            pedidoId: cliente1.id,
+            clienteId: cliente1.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Pizza',
-            descricao: 'Pizza de calabresa',
-            categoria: 'PRATO_PRINCIPAL',
+            nome: 'Pedido 2',
+            descricao: 'Pedido grande',
+            categoria: 'DELIVERY',
             preco: 45.0,
-            pedidoId: cliente2.id,
+            clienteId: cliente2.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Refrigerante',
-            categoria: 'BEBIDA',
+            nome: 'Pedido 3',
+            categoria: 'PRESENCIAL',
             preco: 8.0,
-            pedidoId: cliente3.id,
+            clienteId: cliente3.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Suco Natural',
-            categoria: 'BEBIDA',
+            nome: 'Pedido 4',
+            categoria: 'ONLINE',
             preco: 10.0,
-            pedidoId: cliente4.id,
+            clienteId: cliente4.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Batata Frita',
-            categoria: 'ENTRADA',
+            nome: 'Pedido 5',
+            categoria: 'RETIRADA',
             preco: 15.0,
-            pedidoId: cliente5.id,
+            clienteId: cliente5.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Salada',
-            categoria: 'ENTRADA',
+            nome: 'Pedido 6',
+            categoria: 'DELIVERY',
             preco: 18.0,
-            pedidoId: cliente6.id,
+            clienteId: cliente6.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Lasanha',
-            categoria: 'PRATO_PRINCIPAL',
+            nome: 'Pedido 7',
+            categoria: 'PRESENCIAL',
             preco: 35.0,
-            pedidoId: cliente7.id,
+            clienteId: cliente7.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Sorvete',
-            categoria: 'SOBREMESA',
+            nome: 'Pedido 8',
+            categoria: 'ONLINE',
             preco: 12.0,
-            pedidoId: cliente8.id,
+            clienteId: cliente8.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Café',
-            categoria: 'BEBIDA',
+            nome: 'Pedido 9',
+            categoria: 'DELIVERY',
             preco: 5.0,
-            pedidoId: cliente9.id,
+            clienteId: cliente9.id,
         },
     });
 
-    await prisma.cardapio.create({
+    await prisma.pedido.create({
         data: {
-            nome: 'Bolo de Chocolate',
-            categoria: 'SOBREMESA',
+            nome: 'Pedido 10',
+            categoria: 'RETIRADA',
             preco: 14.0,
-            pedidoId: cliente10.id,
+            clienteId: cliente10.id,
         },
     });
 
