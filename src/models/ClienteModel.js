@@ -7,7 +7,6 @@ export default class ClienteModel {
         email = null,
         telefone = null,
         cep = null,
-        endereco = null,
         logradouro = null,
         bairro = null,
         localidade = null,
@@ -18,7 +17,6 @@ export default class ClienteModel {
         this.email = email;
         this.telefone = telefone;
         this.cep = cep;
-        this.endereco = endereco;
         this.logradouro = logradouro;
         this.bairro = bairro;
         this.localidade = localidade;
@@ -35,14 +33,19 @@ export default class ClienteModel {
             return { status: 400, error: 'O nome deve ter entre 3 e 100 caracteres.' };
         }
 
-        if (!/^\d{11}$/.test(this.cpf)) {
-            return { status: 400, error: 'CPF deve conter 11 dígitos numéricos.' };
+        // Formatar CEP para XXXXX-XXX
+        let cepFormatado = this.cep;
+        if (this.cep) {
+            const cepNumeros = this.cep.toString().replace(/\D/g, '');
+            if (cepNumeros.length === 8) {
+                cepFormatado = `${cepNumeros.slice(0, 5)}-${cepNumeros.slice(5)}`;
+            }
         }
 
         let endereco = {};
-        if (this.cep) {
+        if (cepFormatado) {
             try {
-                endereco = await buscarEnderecoPorCep(this.cep);
+                endereco = await buscarEnderecoPorCep(cepFormatado);
             } catch (error) {
                 console.warn('Não foi possível buscar o endereço pelo CEP:', error.message);
             }
@@ -53,22 +56,30 @@ export default class ClienteModel {
                 nome: this.nome,
                 email: this.email,
                 telefone: this.telefone,
-                cep: this.cep,
-                endreco: this.endereco,
-                logradouro: this.logradouro,
-                bairro: this.bairro,
-                localidade: this.localidade,
-                uf: this.uf,
+                cep: cepFormatado,
+                logradouro: endereco.logradouro || this.logradouro,
+                bairro: endereco.bairro || this.bairro,
+                localidade: endereco.localidade || this.localidade,
+                uf: endereco.uf || this.uf,
                 ativo: this.ativo,
             },
         });
     }
 
     async atualizar() {
-        let endereco = {};
+        // Formatar CEP para XXXXX-XXX
+        let cepFormatado = this.cep;
         if (this.cep) {
+            const cepNumeros = this.cep.toString().replace(/\D/g, '');
+            if (cepNumeros.length === 8) {
+                cepFormatado = `${cepNumeros.slice(0, 5)}-${cepNumeros.slice(5)}`;
+            }
+        }
+
+        let endereco = {};
+        if (cepFormatado) {
             try {
-                endereco = await buscarEnderecoPorCep(this.cep);
+                endereco = await buscarEnderecoPorCep(cepFormatado);
             } catch (error) {
                 console.warn('Não foi possível buscar o endereço pelo CEP:', error.message);
             }
@@ -80,7 +91,7 @@ export default class ClienteModel {
                 nome: this.nome,
                 email: this.email,
                 telefone: this.telefone,
-                cep: this.cep,
+                cep: cepFormatado,
                 logradouro: endereco.logradouro || this.logradouro,
                 bairro: endereco.bairro || this.bairro,
                 localidade: endereco.localidade || this.localidade,
@@ -115,7 +126,7 @@ export default class ClienteModel {
     }
 
     static async buscarPorId(id) {
-        const data = await prisma.telefone.findUnique({ where: { id } });
+        const data = await prisma.cliente.findUnique({ where: { id } });
         if (!data) {
             return null;
         }
