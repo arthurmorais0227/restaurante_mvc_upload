@@ -1,47 +1,47 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
 
 enum Categoria {
-  ONLINE
-  PRESENCIAL
-  DELIVERY
-  RETIRADA
+    ONLINE
+    PRESENCIAL
+    DELIVERY
+    RETIRADA
 }
 
 model Cliente {
-  id           Int      @id @default(autoincrement())
-  nome         String
-  email        String?
-  telefone     String?
-  cep          String?  @db.Char(9)
-  endereco     String?
-  logradouro   String?
-  bairro       String?
-  localidade   String?
-  uf           String?
-  ativo        Boolean  @default(true)
+    id         Int     @id @default(autoincrement())
+    nome       String
+    email      String?
+    telefone   String?
+    cep        String? @db.Char(9)
+    endereco   String?
+    logradouro String?
+    bairro     String?
+    localidade String?
+    uf         String?
+    ativo      Boolean @default(true)
 
-  pedidos      Pedido[]
+    pedidos Pedido[]
 
-  @@map("cliente")
+    @@map("cliente")
 }
 
 model Pedido {
-  id          Int       @id @default(autoincrement())
-  nome        String
-  descricao   String?
-  categoria   Categoria
-  disponivel  Boolean   @default(true)
-  preco       Decimal   @db.Decimal(10, 2)
-  foto        String?
+    id         Int       @id @default(autoincrement())
+    nome       String
+    descricao  String?
+    categoria  Categoria
+    disponivel Boolean   @default(true)
+    preco      Decimal   @db.Decimal(10, 2)
+    foto       String?
 
-  clienteId   Int
-  cliente     Cliente  @relation(fields: [clienteId], references: [id])
+    clienteId Int
+    cliente   Cliente @relation(fields: [clienteId], references: [id])
 
-  @@map("pedido")
+    @@map("pedido")
 }
