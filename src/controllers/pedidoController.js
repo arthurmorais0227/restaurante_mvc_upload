@@ -1,4 +1,4 @@
-import ExemploModel from '../models/ExemploModel.js';
+import pedidoModel from '../models/PedidoModel.js';
 
 export const criar = async (req, res) => {
     try {
@@ -6,7 +6,7 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const { nome, estado, preco } = req.body;
+        const { nome, categoria, disponivel, preco} = req.body;
 
         if (!nome){
             return res.status(400).json({ error: 'O campo "nome" é obrigatório!' });
@@ -15,8 +15,12 @@ export const criar = async (req, res) => {
             return res.status(400).json({ error: 'O campo "preco" é obrigatório!' });
         }
 
-        const exemplo = new ExemploModel({ nome, estado, preco: parseFloat(preco) });
-        const data = await exemplo.criar();
+        if (disponivel !== true){
+        return res.status(400).json({ error:'O campo "disponivel" precisa ser true'})
+        }
+
+        const pedido = new pedidoModel({ nome, preco: parseFloat(preco),categoria,disponivel });
+        const data = await pedido.criar();
 
         return res.status(201).json({ message: 'Registro criado com sucesso!', data });
     } catch (error) {
@@ -27,7 +31,7 @@ export const criar = async (req, res) => {
 
 export const buscarTodos = async (req, res) => {
     try {
-        const registros = await ExemploModel.buscarTodos(req.query);
+        const registros = await pedidoModel.buscarTodos(req.query);
 
         if (!registros || registros.length === 0) {
             return res.status(200).json({ message: 'Nenhum registro encontrado.' });
@@ -48,13 +52,13 @@ export const buscarPorId = async (req, res) => {
             return res.status(400).json({ error: 'O ID enviado não é um número válido.' });
         }
 
-        const exemplo = await ExemploModel.buscarPorId(parseInt(id));
+        const pedido = await pedidoModel.buscarPorId(parseInt(id));
 
-        if (!exemplo) {
+        if (!pedido) {
             return res.status(404).json({ error: 'Registro não encontrado.' });
         }
 
-        return res.json({ data: exemplo });
+        return res.json({ data: pedido });
     } catch (error) {
         console.error('Erro ao buscar:', error);
         return res.status(500).json({ error: 'Erro ao buscar registro.' });
@@ -73,23 +77,23 @@ export const atualizar = async (req, res) => {
             return res.status(400).json({ error: 'Corpo da requisição vazio. Envie os dados!' });
         }
 
-        const exemplo = await ExemploModel.buscarPorId(parseInt(id));
+        const pedido = await pedidoModel.buscarPorId(parseInt(id));
 
-        if (!exemplo) {
+        if (!pedido) {
             return res.status(404).json({ error: 'Registro não encontrado para atualizar.' });
         }
 
         if (req.body.nome !== undefined) {
-            exemplo.nome = req.body.nome;
+            pedido.nome = req.body.nome;
         }
         if (req.body.estado !== undefined) {
-            exemplo.estado = req.body.estado;
+            pedido.estado = req.body.estado;
         }
         if (req.body.preco !== undefined) {
-            exemplo.preco = parseFloat(req.body.preco);
+            pedido.preco = parseFloat(req.body.preco);
         }
 
-        const data = await exemplo.atualizar();
+        const data = await pedido.atualizar();
 
         return res.json({ message: `O registro "${data.nome}" foi atualizado com sucesso!`, data });
     } catch (error) {
@@ -106,15 +110,15 @@ export const deletar = async (req, res) => {
             return res.status(400).json({ error: 'ID inválido.' });
         }
 
-        const exemplo = await ExemploModel.buscarPorId(parseInt(id));
+        const pedido = await pedidoModel.buscarPorId(parseInt(id));
 
-        if (!exemplo) {
+        if (!pedido) {
             return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
         }
 
-        await exemplo.deletar();
+        await pedido.deletar();
 
-        return res.json({ message: `O registro "${exemplo.nome}" foi deletado com sucesso!`, deletado: exemplo });
+        return res.json({ message: `O registro "${pedido.nome}" foi deletado com sucesso!`, deletado: pedido });
     } catch (error) {
         console.error('Erro ao deletar:', error);
         return res.status(500).json({ error: 'Erro ao deletar registro.' });
