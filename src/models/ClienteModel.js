@@ -13,6 +13,7 @@ export default class ClienteModel {
         localidade = null,
         uf = null,
         ativo = true,
+        foto = null,
     } = {}) {
         this.id = id;
         this.nome = nome;
@@ -24,6 +25,7 @@ export default class ClienteModel {
         this.localidade = localidade;
         this.uf = uf;
         this.ativo = ativo;
+        this.foto = foto;
     }
 
     async criar() {
@@ -64,6 +66,7 @@ export default class ClienteModel {
                 localidade: endereco.localidade || this.localidade,
                 uf: endereco.uf || this.uf,
                 ativo: this.ativo,
+                foto: this.foto,
             },
         });
     }
@@ -99,6 +102,7 @@ export default class ClienteModel {
                 localidade: endereco.localidade || this.localidade,
                 uf: endereco.uf || this.uf,
                 ativo: this.ativo,
+                foto: this.foto,
             },
         });
     }
