@@ -3,6 +3,7 @@ import { buscarEnderecoPorCep } from '../utils/cep.js';
 
 export default class ClienteModel {
     constructor({
+        id = null,
         nome,
         email = null,
         telefone = null,
@@ -13,6 +14,7 @@ export default class ClienteModel {
         uf = null,
         ativo = true,
     } = {}) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
