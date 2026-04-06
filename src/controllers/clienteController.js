@@ -124,7 +124,7 @@ export const deletar = async (req, res) => {
         const cliente = await ClienteModel.buscarPorId(parseInt(id));
 
         if (!cliente) {
-            return res.status(404).json({ error: 'Registro não encontrado para deletar.' });
+            return res.status(404).json({ error: "Registro não encontrado para deletar." });
         }
 
         await cliente.deletar();
