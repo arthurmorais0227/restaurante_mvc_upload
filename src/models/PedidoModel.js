@@ -1,7 +1,7 @@
 import prisma from '../utils/prismaClient.js';
 
-export default class ExemploModel {
-    constructor({ id = null, nome = null, descricao = true, disponivel = null, preco = null, foto = null, clienteId = null } = {}) {
+export default class PedidoModel {
+    constructor({ id = null, nome, descricao = true, disponivel = null, preco = null, foto = null, clienteId = null } = {}) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -12,12 +12,12 @@ export default class ExemploModel {
     }
 
     async criar() {
-        return prisma.exemplo.create({
+        return prisma.pedido.create({
             data: {
                 nome: this.nome,
                 descricao: this.descricao,
                 disponivel: this.disponivel,
-                preco: new Prisma.Decimal(this.preco),
+                preco: new prisma.Decimal(this.preco),
                 foto:this.foto,
                 clienteId:this.clienteId
             },
@@ -25,13 +25,13 @@ export default class ExemploModel {
     }
 
     async atualizar() {
-        return prisma.exemplo.update({
+        return prisma.pedido.update({
             where: { id: this.id },
             data: {
                 nome: this.nome,
                 descricao: this.descricao,
                 disponivel: this.disponivel,
-                preco: new Prisma.Decimal(this.preco),
+                preco: new prisma.Decimal(this.preco),
                 foto: this.foto
             },
 
@@ -56,7 +56,7 @@ export default class ExemploModel {
             where.categoria = filtros.categoria;
         }
 
-        return prisma.exemplo.findMany({ where });
+        return prisma.pedido.findMany({ where });
     }
 
     static async buscarPorId(id) {
