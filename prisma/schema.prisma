@@ -24,6 +24,7 @@ model Cliente {
     localidade String?
     uf         String?
     ativo      Boolean @default(true)
+    foto       String?
 
     pedidos Pedido[]
 
